@@ -49,6 +49,9 @@ h1 {
     font-size: 50px;
     background-color: #222A68;
     width: 100%;
+    
+    left: 0px;
+    right: 0px;
 }
 
 #scoreCounter {
@@ -57,5 +60,6 @@ h1 {
     color: white;
     position: fixed;
     bottom: 0pt;
-
+    left: 0px;
+    right: 0px;
 }
