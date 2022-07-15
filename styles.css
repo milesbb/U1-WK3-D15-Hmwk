@@ -5,26 +5,57 @@ html {
   height: 100%;
   text-align: center;
   justify-items: center;
+  background-color: #654597;
+  color: #222A68;
 }
 
 .questionBox {
-
+    background-color: #E2ADF2;
+    border-radius: 20px;
+    width: 90%;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    justify-items: center;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-size: 30px;
+    box-shadow: 2px 2px 5px black ;
 }
 
 .buttonBox {
-
+    background-color: #91785D;
 }
 .questionTitle {
+    font-size: 20px;
+    margin: 10px;
 }
 
 .questionInput {
-
+    background-color: #bbe1c3;
+    border-radius: 20px;
+    width: 80%;
+    height: 70px;
+    display: block;
+    justify-items: center;
+    margin: auto;
+    margin-bottom: 20px;
+    font-size: 25px;
+    box-shadow: 1px 1px 2px black ;
 }
 
-.correct {
-
+h1 {
+    color: white;
+    font-size: 50px;
+    background-color: #222A68;
+    width: 100%;
 }
 
-.incorrect {
+#scoreCounter {
+    width: 100%;
+    background-color: #574AE2;
+    color: white;
+    position: fixed;
+    bottom: 0pt;
 
 }

@@ -44,9 +44,9 @@
     />
   </head>
   <body>
-    <h1>QUIZ</h1>
+    <h1>COOL CODING QUIZ</h1>
     <div class="main"></div>
-    <p id="scoreCounter">Score: 0</p>
+    <div id="scoreCounter">Score: 0 Lives: ***</div>
     <script>
       const questions = [
         {
@@ -231,66 +231,51 @@
           newInput2.value = "false";
           newQuestion.appendChild(newInput2);
         }
-
-        // const newInput = document.createElement("input");
-        // newInput.setAttribute("type", "button");
-        // newInput.classList.add("questionInput");
-        // newInput.value = "HELLO";
-        // newButtons.appendChild(newInput);
-
-        // for (let v = 0; v < allAnswers; v++) {
-        //   const newInput = document.createElement("input");
-        //   newInput.setAttribute("type", "button");
-        //   newInput.classList.add("questionInput");
-        //   newInput.value = "hello";
-        //   const targetQuestions = document.getElementsByClassName("questionBox");
-        //   targetQuestions[targetQuestions.length - 1].appendChild(newInput);
-        // }
-
-        // if (questions[i].type === "multiple") {
-        //   let allAnswers = questions[i].incorrect_answers;
-        //   allAnswers[incorrect_answers.length] = questions[i].correct_answer;
-        //   for (let v = 0; v < questions[i].incorrect_answers.length + 1; v++) {
-        //     const newInput = document.createElement("input");
-        //     newInput.classList.add("questionInput");
-        //     newInput.setAttribute("type", "button");
-        //     newInput.value = allAnswers[i];
-        //     newQuestion.appendChild(newInput);
-        //   }
-        // } else if (questions[i].type === "boolean") {
-        //   const newInput = document.createElement("input");
-        //   newInput.classList.add("questionInput");
-        //   newInput.innerText = questions[i].question;
-        //   newQuestion.appendChild(newInput);
-        // }
+      }
+      function ender() {
+        if (final === true) {
+          location.reload();
+        }
+      }
+      function calcLives(amount) {
+        let result = "";
+        for (let i = 0; i < amount; i++) {
+          result += "*";
+        }
+        return result;
       }
 
-      // const madeQuestions = document.getElementsByClassName("questionBox");
-      // for (let i = 0; i < questions.length; i++) {
-      //   let allAnswers = new Array(4);
-      //   allAnswers = questions[i].incorrect_answers;
-      //   allAnswers[incorrect_answers.length] = questions[i].correct_answer;
-
-      //   if (questions[i].type === "multiple") {
-      //     const newInput = document.createElement("input");
-      //     newInput.setAttribute("type", "button");
-      //     newInput.classList.add("questionInput");
-      //     newInput.value = allAnswers[0];
-      //     madeQuestions[i].appendChild(newInput);
-      //   } else if (questions[i].type === "boolean") {
-      //     const newInput1 = document.createElement("input");
-      //     newInput1.setAttribute("type", "button");
-      //     newInput1.classList.add("questionInput");
-      //     newInput1.value = "true";
-      //     madeQuestions[i].appendChild(newInput1);
-
-      //     const newInput2 = document.createElement("input");
-      //     newInput2.setAttribute("type", "button");
-      //     newInput2.classList.add("questionInput");
-      //     newInput2.value = "false";
-      //     madeQuestions[i].appendChild(newInput2);
-      //   }
-      // }
+      let final = false;
+      let lives = 3;
+      function checker() {
+        if (qLog > 10) {
+          location.reload();
+        } else if (qLog === 10) {
+          if (score === 10) {
+            const scoreDiv = document.getElementById("scoreCounter");
+            scoreDiv.style.backgroundColor = "green";
+            scoreDiv.innerText =
+              "Score: " + score.toString() + ", PERFECT SCORE!";
+          } else if (score < 10) {
+            const scoreDiv = document.getElementById("scoreCounter");
+            scoreDiv.style.backgroundColor = "red";
+            scoreDiv.innerText =
+              "Score: " +
+              score.toString() +
+              ", Better Luck Next Time, Refresh to play again!";
+          }
+        }
+        if (lives === 0) {
+          const scoreDiv = document.getElementById("scoreCounter");
+          scoreDiv.style.backgroundColor = "red";
+          scoreDiv.innerText =
+            "Score: " +
+            score.toString() +
+            ", Out of lives! Better Luck Next Time, Refresh to play again!";
+          final = true;
+          console.log(final);
+        }
+      }
 
       const buttons = document.querySelectorAll(".questionInput");
       let correctAnswers = new Array();
@@ -300,6 +285,8 @@
       }
       console.log("C: " + correctAnswers);
       let score = 0;
+      let qLog = 0;
+
       console.log(buttons);
 
       for (let i = 0; i < buttons.length; i++) {
@@ -313,155 +300,54 @@
         ) {
           buttons[i].addEventListener("click", function b(e) {
             if (e.target.value === "true") {
+              ender();
               e.target.style.backgroundColor = "red";
               console.log("SPECIAL TEST WRONG");
               console.log(e.target.value);
+              lives--;
+              document.getElementById("scoreCounter").innerText =
+                "Score: " + score.toString() + " Lives: " + calcLives(lives);
+              qLog++;
+              checker();
             } else if (e.target.value === "false") {
+              ender();
               e.target.style.backgroundColor = "green";
               console.log("test true");
               console.log("SPECIAL TEST RIGHT");
               console.log(score);
               score++;
               document.getElementById("scoreCounter").innerText =
-                "Score: " + score.toString();
+                "Score: " + score.toString() + " Lives: " + calcLives(lives);
+              qLog++;
+              checker();
             }
           });
         } else {
           buttons[i].addEventListener("click", function f(e) {
             if (correctAnswers.indexOf(e.target.value) == -1) {
+              ender();
               e.target.style.backgroundColor = "red";
               console.log("test false");
               console.log(e.target.value);
+              lives--;
+              document.getElementById("scoreCounter").innerText =
+                "Score: " + score.toString() + " Lives: " + calcLives(lives);
+              qLog++;
+              checker();
             } else {
+              ender();
               e.target.style.backgroundColor = "green";
               console.log("test true");
               console.log(score);
               score++;
               document.getElementById("scoreCounter").innerText =
-                "Score: " + score.toString();
+                "Score: " + score.toString() + " Lives: " + calcLives(lives);
+              qLog++;
+              checker();
             }
           });
         }
       }
-
-      // buttons.forEach((questionInput) =>
-      //   questionInput.addEventListener("click", function f(e) {
-      //     if (correctAnswers.indexOf(e.target.value) == -1) {
-      //       e.target.style.backgroundColor = "red";
-      //       console.log("test false");
-      //       console.log(e.target.value);
-      //     } else {
-      //       e.target.style.backgroundColor = "green";
-      //       console.log("test true");
-      //       console.log(score);
-      //       score++;
-      //       document.getElementById("scoreCounter").innerText =
-      //         "Score: " + score.toString();
-      //     }
-      //   })
-      // );
-
-      // const buttonsTFBoxes = document.querySelectorAll(".questionBox");
-      // let changeButton = Array();
-      // changeButton[0] = buttonsTFBoxes[2].querySelectorAll(".questionInput");
-      // changeButton[1] = buttonsTFBoxes[3].querySelectorAll(".questionInput");
-      // changeButton[2] = buttonsTFBoxes[8].querySelectorAll(".questionInput");
-      // for (let i = 0; i < changeButton.length; i++) {
-      //   changeButton[i].addEventListener("click", function f(e) {
-      //     if (correctAnswers.indexOf(e.target.value) == "True") {
-      //       e.target.style.backgroundColor = "red";
-      //       console.log("SPECIAL TEST WRONG");
-      //       console.log(e.target.value);
-      //     } else {
-      //       e.target.style.backgroundColor = "green";
-      //       console.log("test true");
-      //       console.log("SPECIAL TEST RIGHT");
-      //       console.log(score);
-      //       score++;
-      //       document.getElementById("scoreCounter").innerText =
-      //         "Score: " + score.toString();
-      //     }
-      //   });
-      // }
-
-      // if (i === 2) {
-      //   changeButton.addEventListener("click", (e) => {
-      //     if (correctAnswers.indexOf(e.target.value) == -1) {
-      //       e.target.style.backgroundColor = "red";
-      //       console.log("test false");
-      //       console.log(e.target.value);
-      //     } else {
-      //       e.target.style.backgroundColor = "green";
-      //       console.log("test true");
-      //       console.log(score);
-      //       score++;
-      //       document.getElementById("scoreCounter").innerText =
-      //         "Score: " + score.toString();
-      //     }
-      //   });
-      // } else if (i === 3) {
-      //   changeButton.addEventListener("click", (e) => {
-      //     if (correctAnswers.indexOf(e.target.value) == -1) {
-      //       e.target.style.backgroundColor = "red";
-      //       console.log("test false");
-      //       console.log(e.target.value);
-      //     } else {
-      //       e.target.style.backgroundColor = "green";
-      //       console.log("test true");
-      //       console.log(score);
-      //       score++;
-      //       document.getElementById("scoreCounter").innerText =
-      //         "Score: " + score.toString();
-      //     }
-      //   });
-      // } else if (i === 8) {
-      //   changeButton.addEventListener("click", (e) => {
-      //     if (correctAnswers.indexOf(e.target.value) == -1) {
-      //       e.target.style.backgroundColor = "red";
-      //       console.log("test false");
-      //       console.log(e.target.value);
-      //     } else {
-      //       e.target.style.backgroundColor = "green";
-      //       console.log("test true");
-      //       console.log(score);
-      //       score++;
-      //       document.getElementById("scoreCounter").innerText =
-      //         "Score: " + score.toString();
-      //     }
-      //   });
-      // }
-      // for (let i = 0; i < buttonsTFBoxes.length; i++) {
-      //   if (i === 2 || i === 3 || i == 8) {
-      //     let changeButton =
-      //       buttonsTFBoxes[i].querySelectorAll(".questionInput");
-      //     changeButton.removeEventListener("onclick", f);
-      //     changeButton.addEventListener("click", (e) => {
-      //       if (correctAnswers.indexOf(e.target.value) == -1) {
-      //         e.target.style.backgroundColor = "red";
-      //         console.log("test false");
-      //         console.log(e.target.value);
-      //       } else {
-      //         e.target.style.backgroundColor = "green";
-      //         console.log("test true");
-      //         console.log(score);
-      //         score++;
-      //         document.getElementById("scoreCounter").innerText =
-      //           "Score: " + score.toString();
-      //       }
-      //     });
-      //   }
-      // }
-
-      // for (let i = 0; i < buttons.length; i++) {
-      //   buttons.onclick = function (event) {
-      //     if (correctAnswers.indexOf(e.target.value) == -1) {
-      //       buttons[i].style.backgroundColor = "red";
-      //     } else {
-      //       buttons[i].style.backgroundColor = "green";
-      //       score++;
-      //     }
-      //   };
-      // }
     </script>
   </body>
 </html>
