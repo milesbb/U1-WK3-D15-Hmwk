@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!--
+        QUIZ GAME!
+
+        RULES:
+        / The player must guess correctly a certain amount of questions
+        / Each correct answer gives him one point
+        / Answers could be multiple or true/false
+        / At the end of the game, the user must know his/her total score
+
+        QUESTIONS:
+        / You can get them from this URL ( http://bit.ly/strive_QUIZZ ) or you can write your own
+        / Could be multiple of boolean (true / false)
+
+        HINTS:
+        / Keep a global variable score for the user score
+        / Keep a variable questionNumber for the question the user is answering
+        / When questionNumber is bigger then the available questions, present the score
+        / Start working with the questions saved in a variable (or you can use AJAX for fetching external questions if you already know how to do it!)
+        / Start with the easier version and THEN implement the EXTRAs
+        / Please debug everything / try it on the console to be sure of what to expect from your code
+
+        EXTRA:
+        / Show if the answer provided was the wrong one or correct it after clicking
+        / Present the questions one at a time instead of having all of them displayed together
+        / Let the user select difficulty and number of questions (you can get q/a from https://opentdb.com/api.php?amount=10&category=18&difficulty=easy modifying amount and difficulty)
+    
+        /* WHEN YOU ARE FINISHED
+          Commit and push the code to your personal GitHub repository; then post the link of your commit on the Homework section of today's Eduflow.
+        */
+    -->
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./styles.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mingzat&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <h1>QUIZ</h1>
+    <div class="main"></div>
+    <p id="scoreCounter">Score: 0</p>
+    <script>
+      const questions = [
+        {
+          category: "Science: Computers",
+          type: "multiple",
+          difficulty: "easy",
+          question: "What does CPU stand for?",
+          correct_answer: "Central Processing Unit",
+          incorrect_answers: [
+            "Central Process Unit",
+            "Computer Personal Unit",
+            "Central Processor Unit",
+          ],
+        },
+        {
+          category: "Science: Computers",
+          type: "multiple",
+          difficulty: "easy",
+          question:
+            "In the programming language Java, which of these keywords would you put on a variable to make sure it doesn't get modified?",
+          correct_answer: "Final",
+          incorrect_answers: ["Static", "Private", "Public"],
+        },
+        {
+          category: "Science: Computers",
+          type: "boolean",
+          difficulty: "easy",
+          question: "The logo for Snapchat is a Bell.",
+          correct_answer: "False",
+          incorrect_answers: ["True"],
+        },
+        {
+          category: "Science: Computers",
+          type: "boolean",
+          difficulty: "easy",
+          question:
+            "Pointers were not used in the original C programming language; they were added later on in C++.",
+          correct_answer: "False",
+          incorrect_answers: ["True"],
+        },
+        {
+          category: "Science: Computers",
+          type: "multiple",
+          difficulty: "easy",
+          question:
+            "What is the most preferred image format used for logos in the Wikimedia database?",
+          correct_answer: ".svg",
+          incorrect_answers: [".png", ".jpeg", ".gif"],
+        },
+        {
+          category: "Science: Computers",
+          type: "multiple",
+          difficulty: "easy",
+          question: "In web design, what does CSS stand for?",
+          correct_answer: "Cascading Style Sheet",
+          incorrect_answers: [
+            "Counter Strike: Source",
+            "Corrective Style Sheet",
+            "Computer Style Sheet",
+          ],
+        },
+        {
+          category: "Science: Computers",
+          type: "multiple",
+          difficulty: "easy",
+          question:
+            "What is the code name for the mobile operating system Android 7.0?",
+          correct_answer: "Nougat",
+          incorrect_answers: [
+            "Ice Cream Sandwich",
+            "Jelly Bean",
+            "Marshmallow",
+          ],
+        },
+        {
+          category: "Science: Computers",
+          type: "multiple",
+          difficulty: "easy",
+          question: "On Twitter, what is the character limit for a Tweet?",
+          correct_answer: "140",
+          incorrect_answers: ["120", "160", "100"],
+        },
+        {
+          category: "Science: Computers",
+          type: "boolean",
+          difficulty: "easy",
+          question: "Linux was first created as an alternative to Windows XP.",
+          correct_answer: "False",
+          incorrect_answers: ["True"],
+        },
+        {
+          category: "Science: Computers",
+          type: "multiple",
+          difficulty: "easy",
+          question:
+            "Which programming language shares its name with an island in Indonesia?",
+          correct_answer: "Java",
+          incorrect_answers: ["Python", "C", "Jakarta"],
+        },
+      ];
+
+      window.onload = function () {
+        // HINTS
+        // IF YOU ARE DISPLAYING ALL THE QUESTIONS AT ONCE:
+        // For each question, create a container for wrapping it; then create a radio button
+        // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/radio
+        // with, as options, both the correct answer and the incorrect ones
+        // (you'll probably need to google how to get the value from a radio button in JS to evaluate the final score)
+        //
+        // IF YOU ARE DISPLAYING ONE QUESTION AT A TIME
+        // Display the first question with the text and the radio buttons
+        // when the user selects an answer, pick the next question from the array and replace the old one with it
+        // saving the user's choice in a variable
+      };
+
+      // How to calculate the result? You can do it in 2 ways:
+      // If you are presenting all the questions together, just take all the radio buttons and check if the selected answer === correct_answer
+      // If you are presenting one question at a time, just add one point or not to the user score if the selected answer === correct_answer
+
+      const main = document.getElementsByClassName("main")[0];
+      for (let i = 0; i < questions.length; i++) {
+        const newQuestion = document.createElement("div");
+        newQuestion.classList.add("questionBox");
+        let count = i + 1;
+        newQuestion.innerText = "Question " + count.toString();
+        main.appendChild(newQuestion);
+
+        const newButtons = document.createElement("div");
+        newButtons.classList.add("buttonBox");
+        main.appendChild(newButtons);
+
+        const newTitle = document.createElement("p");
+        newTitle.classList.add("questionTitle");
+        newTitle.innerText = questions[i].question;
+        newQuestion.appendChild(newTitle);
+
+        let allAnswers = ["", "", "", ""];
+        let rand = Math.floor(Math.random() * 3) + 1;
+        allAnswers[rand] = questions[i].correct_answer;
+        let count1 = 0;
+        for (let v = 0; v < 4; v++) {
+          if (allAnswers[v] === "") {
+            allAnswers[v] = questions[i].incorrect_answers[count1];
+            count1++;
+          }
+        }
+
+        if (questions[i].type == "multiple") {
+          const newInput = document.createElement("input");
+          newInput.setAttribute("type", "button");
+          newInput.classList.add("questionInput");
+          newInput.value = allAnswers[0];
+          newQuestion.appendChild(newInput);
+
+          const newInput1 = document.createElement("input");
+          newInput1.setAttribute("type", "button");
+          newInput1.classList.add("questionInput");
+          newInput1.value = allAnswers[1];
+          newQuestion.appendChild(newInput1);
+
+          const newInput2 = document.createElement("input");
+          newInput2.setAttribute("type", "button");
+          newInput2.classList.add("questionInput");
+          newInput2.value = allAnswers[2];
+          newQuestion.appendChild(newInput2);
+
+          const newInput3 = document.createElement("input");
+          newInput3.setAttribute("type", "button");
+          newInput3.classList.add("questionInput");
+          newInput3.value = allAnswers[3];
+          newQuestion.appendChild(newInput3);
+        } else if (questions[i].type == "boolean") {
+          const newInput1 = document.createElement("input");
+          newInput1.setAttribute("type", "button");
+          newInput1.classList.add("questionInput");
+          newInput1.value = "true";
+          newQuestion.appendChild(newInput1);
+
+          const newInput2 = document.createElement("input");
+          newInput2.setAttribute("type", "button");
+          newInput2.classList.add("questionInput");
+          newInput2.value = "false";
+          newQuestion.appendChild(newInput2);
+        }
+
+        // const newInput = document.createElement("input");
+        // newInput.setAttribute("type", "button");
+        // newInput.classList.add("questionInput");
+        // newInput.value = "HELLO";
+        // newButtons.appendChild(newInput);
+
+        // for (let v = 0; v < allAnswers; v++) {
+        //   const newInput = document.createElement("input");
+        //   newInput.setAttribute("type", "button");
+        //   newInput.classList.add("questionInput");
+        //   newInput.value = "hello";
+        //   const targetQuestions = document.getElementsByClassName("questionBox");
+        //   targetQuestions[targetQuestions.length - 1].appendChild(newInput);
+        // }
+
+        // if (questions[i].type === "multiple") {
+        //   let allAnswers = questions[i].incorrect_answers;
+        //   allAnswers[incorrect_answers.length] = questions[i].correct_answer;
+        //   for (let v = 0; v < questions[i].incorrect_answers.length + 1; v++) {
+        //     const newInput = document.createElement("input");
+        //     newInput.classList.add("questionInput");
+        //     newInput.setAttribute("type", "button");
+        //     newInput.value = allAnswers[i];
+        //     newQuestion.appendChild(newInput);
+        //   }
+        // } else if (questions[i].type === "boolean") {
+        //   const newInput = document.createElement("input");
+        //   newInput.classList.add("questionInput");
+        //   newInput.innerText = questions[i].question;
+        //   newQuestion.appendChild(newInput);
+        // }
+      }
+
+      // const madeQuestions = document.getElementsByClassName("questionBox");
+      // for (let i = 0; i < questions.length; i++) {
+      //   let allAnswers = new Array(4);
+      //   allAnswers = questions[i].incorrect_answers;
+      //   allAnswers[incorrect_answers.length] = questions[i].correct_answer;
+
+      //   if (questions[i].type === "multiple") {
+      //     const newInput = document.createElement("input");
+      //     newInput.setAttribute("type", "button");
+      //     newInput.classList.add("questionInput");
+      //     newInput.value = allAnswers[0];
+      //     madeQuestions[i].appendChild(newInput);
+      //   } else if (questions[i].type === "boolean") {
+      //     const newInput1 = document.createElement("input");
+      //     newInput1.setAttribute("type", "button");
+      //     newInput1.classList.add("questionInput");
+      //     newInput1.value = "true";
+      //     madeQuestions[i].appendChild(newInput1);
+
+      //     const newInput2 = document.createElement("input");
+      //     newInput2.setAttribute("type", "button");
+      //     newInput2.classList.add("questionInput");
+      //     newInput2.value = "false";
+      //     madeQuestions[i].appendChild(newInput2);
+      //   }
+      // }
+
+      const buttons = document.querySelectorAll(".questionInput");
+      let correctAnswers = new Array();
+      for (let i = 0; i < questions.length; i++) {
+        if (questions[i].correct_answer != "False")
+          correctAnswers[i] = questions[i].correct_answer;
+      }
+      console.log("C: " + correctAnswers);
+      let score = 0;
+      console.log(buttons);
+
+      for (let i = 0; i < buttons.length; i++) {
+        if (
+          i === 8 ||
+          i === 9 ||
+          i === 10 ||
+          i === 11 ||
+          i === 28 ||
+          i === 29
+        ) {
+          buttons[i].addEventListener("click", function b(e) {
+            if (e.target.value === "true") {
+              e.target.style.backgroundColor = "red";
+              console.log("SPECIAL TEST WRONG");
+              console.log(e.target.value);
+            } else if (e.target.value === "false") {
+              e.target.style.backgroundColor = "green";
+              console.log("test true");
+              console.log("SPECIAL TEST RIGHT");
+              console.log(score);
+              score++;
+              document.getElementById("scoreCounter").innerText =
+                "Score: " + score.toString();
+            }
+          });
+        } else {
+          buttons[i].addEventListener("click", function f(e) {
+            if (correctAnswers.indexOf(e.target.value) == -1) {
+              e.target.style.backgroundColor = "red";
+              console.log("test false");
+              console.log(e.target.value);
+            } else {
+              e.target.style.backgroundColor = "green";
+              console.log("test true");
+              console.log(score);
+              score++;
+              document.getElementById("scoreCounter").innerText =
+                "Score: " + score.toString();
+            }
+          });
+        }
+      }
+
+      // buttons.forEach((questionInput) =>
+      //   questionInput.addEventListener("click", function f(e) {
+      //     if (correctAnswers.indexOf(e.target.value) == -1) {
+      //       e.target.style.backgroundColor = "red";
+      //       console.log("test false");
+      //       console.log(e.target.value);
+      //     } else {
+      //       e.target.style.backgroundColor = "green";
+      //       console.log("test true");
+      //       console.log(score);
+      //       score++;
+      //       document.getElementById("scoreCounter").innerText =
+      //         "Score: " + score.toString();
+      //     }
+      //   })
+      // );
+
+      // const buttonsTFBoxes = document.querySelectorAll(".questionBox");
+      // let changeButton = Array();
+      // changeButton[0] = buttonsTFBoxes[2].querySelectorAll(".questionInput");
+      // changeButton[1] = buttonsTFBoxes[3].querySelectorAll(".questionInput");
+      // changeButton[2] = buttonsTFBoxes[8].querySelectorAll(".questionInput");
+      // for (let i = 0; i < changeButton.length; i++) {
+      //   changeButton[i].addEventListener("click", function f(e) {
+      //     if (correctAnswers.indexOf(e.target.value) == "True") {
+      //       e.target.style.backgroundColor = "red";
+      //       console.log("SPECIAL TEST WRONG");
+      //       console.log(e.target.value);
+      //     } else {
+      //       e.target.style.backgroundColor = "green";
+      //       console.log("test true");
+      //       console.log("SPECIAL TEST RIGHT");
+      //       console.log(score);
+      //       score++;
+      //       document.getElementById("scoreCounter").innerText =
+      //         "Score: " + score.toString();
+      //     }
+      //   });
+      // }
+
+      // if (i === 2) {
+      //   changeButton.addEventListener("click", (e) => {
+      //     if (correctAnswers.indexOf(e.target.value) == -1) {
+      //       e.target.style.backgroundColor = "red";
+      //       console.log("test false");
+      //       console.log(e.target.value);
+      //     } else {
+      //       e.target.style.backgroundColor = "green";
+      //       console.log("test true");
+      //       console.log(score);
+      //       score++;
+      //       document.getElementById("scoreCounter").innerText =
+      //         "Score: " + score.toString();
+      //     }
+      //   });
+      // } else if (i === 3) {
+      //   changeButton.addEventListener("click", (e) => {
+      //     if (correctAnswers.indexOf(e.target.value) == -1) {
+      //       e.target.style.backgroundColor = "red";
+      //       console.log("test false");
+      //       console.log(e.target.value);
+      //     } else {
+      //       e.target.style.backgroundColor = "green";
+      //       console.log("test true");
+      //       console.log(score);
+      //       score++;
+      //       document.getElementById("scoreCounter").innerText =
+      //         "Score: " + score.toString();
+      //     }
+      //   });
+      // } else if (i === 8) {
+      //   changeButton.addEventListener("click", (e) => {
+      //     if (correctAnswers.indexOf(e.target.value) == -1) {
+      //       e.target.style.backgroundColor = "red";
+      //       console.log("test false");
+      //       console.log(e.target.value);
+      //     } else {
+      //       e.target.style.backgroundColor = "green";
+      //       console.log("test true");
+      //       console.log(score);
+      //       score++;
+      //       document.getElementById("scoreCounter").innerText =
+      //         "Score: " + score.toString();
+      //     }
+      //   });
+      // }
+      // for (let i = 0; i < buttonsTFBoxes.length; i++) {
+      //   if (i === 2 || i === 3 || i == 8) {
+      //     let changeButton =
+      //       buttonsTFBoxes[i].querySelectorAll(".questionInput");
+      //     changeButton.removeEventListener("onclick", f);
+      //     changeButton.addEventListener("click", (e) => {
+      //       if (correctAnswers.indexOf(e.target.value) == -1) {
+      //         e.target.style.backgroundColor = "red";
+      //         console.log("test false");
+      //         console.log(e.target.value);
+      //       } else {
+      //         e.target.style.backgroundColor = "green";
+      //         console.log("test true");
+      //         console.log(score);
+      //         score++;
+      //         document.getElementById("scoreCounter").innerText =
+      //           "Score: " + score.toString();
+      //       }
+      //     });
+      //   }
+      // }
+
+      // for (let i = 0; i < buttons.length; i++) {
+      //   buttons.onclick = function (event) {
+      //     if (correctAnswers.indexOf(e.target.value) == -1) {
+      //       buttons[i].style.backgroundColor = "red";
+      //     } else {
+      //       buttons[i].style.backgroundColor = "green";
+      //       score++;
+      //     }
+      //   };
+      // }
+    </script>
+  </body>
+</html>
